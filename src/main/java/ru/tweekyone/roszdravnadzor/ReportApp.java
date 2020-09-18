@@ -2,6 +2,7 @@ package ru.tweekyone.roszdravnadzor;
 
 import ru.tweekyone.roszdravnadzor.beans.TableRepresentation;
 import ru.tweekyone.roszdravnadzor.controllers.MainController;
+import ru.tweekyone.roszdravnadzor.gui.MainFrame;
 import ru.tweekyone.roszdravnadzor.service.TablesService;
 
 import java.util.List;
