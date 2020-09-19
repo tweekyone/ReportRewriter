@@ -16,9 +16,10 @@ public class MainFrame extends AbstractFrame {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dimension = toolkit.getScreenSize();
         setLocation(dimension.width/2 - 150, dimension.height/2 - 150);
-        setTitle("ReportMagic");
+        setTitle("ReportMagicApp");
         setVisible(true);
         mc = new MainController();
+        onInitComponents();
     }
 
     private void onInitComponents(){
@@ -34,10 +35,35 @@ public class MainFrame extends AbstractFrame {
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                mc.readPastTable(pastFileChooser.getCurrentDirectory());
+                mc.readThisTable(thisFileChooser.getCurrentDirectory());
+                mc.writeTable(newFileChooser.getCurrentDirectory().getPath());
             }
         });
 
+        JPanel mainPanel = new JPanel();
+        GroupLayout gl = new GroupLayout(mainPanel);
+        mainPanel.setLayout(gl);
+        gl.setAutoCreateGaps(true);
+        gl.setAutoCreateContainerGaps(true);
 
+        gl.setHorizontalGroup(gl.createSequentialGroup()
+                        .addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(pastFileLabel)
+                            .addComponent(pastFileChooser))
+                        .addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(thisFileLabel)
+                            .addComponent(thisFileChooser))
+                        .addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(newFileLabel)
+                            .addComponent(newFileChooser))
+                        .addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(confirm, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+
+        gl.setVerticalGroup(gl.createSequentialGroup());
+
+        add(mainPanel);
     }
+
+
 }

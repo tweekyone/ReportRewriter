@@ -16,8 +16,8 @@ public class MainController {
     private List<TableRepresentation> pastMonth;
     private List<TableRepresentation> thisMonth;
 
-    public void readPastTable(String path){
-        try (FileInputStream fis = new FileInputStream(path);
+    public void readPastTable(File file){
+        try (FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader( fis, "windows-1251")) {
             pastMonth = new CsvToBeanBuilder(isr).withType(TableRepresentation.class).withSeparator(';').build().parse();
         } catch (IOException e){
@@ -25,8 +25,8 @@ public class MainController {
         }
     }
 
-    public void readThisTable(String path){
-        try (FileInputStream fis = new FileInputStream(path);
+    public void readThisTable(File file){
+        try (FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader( fis, "windows-1251")) {
             thisMonth = new CsvToBeanBuilder(isr).withType(TableRepresentation.class).withSeparator(';').build().parse();
         } catch (IOException e){
