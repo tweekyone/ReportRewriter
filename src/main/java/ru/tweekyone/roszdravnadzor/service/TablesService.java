@@ -6,21 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TablesService {
-    private List<TableRepresentation> resultTable;
+    private static List<TableRepresentation> resultTable = new ArrayList<>();
 
-    public TablesService() {
-        this.resultTable = new ArrayList<>();;
-    }
-
-    public List<TableRepresentation> getResultTable() {
+    public static List<TableRepresentation> getResultTable() {
         return resultTable;
     }
 
-    public void setResultTable(List<TableRepresentation> resultTable) {
-        this.resultTable = resultTable;
-    }
-
-    public List<TableRepresentation> doComparsion(List<TableRepresentation> pastMonth, List<TableRepresentation> thisMonth){
+    public static List<TableRepresentation> doComparsion(List<TableRepresentation> pastMonth, List<TableRepresentation> thisMonth){
         if((pastMonth != null || !pastMonth.isEmpty()) && (thisMonth != null || !pastMonth.isEmpty())){
             for (int i = 0; i < thisMonth.size(); i++) {
                 TableRepresentation result = null;
