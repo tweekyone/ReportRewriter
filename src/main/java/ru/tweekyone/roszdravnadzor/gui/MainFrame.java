@@ -1,9 +1,9 @@
 package ru.tweekyone.roszdravnadzor.gui;
 
 import ru.tweekyone.roszdravnadzor.controllers.MainController;
-import ru.tweekyone.roszdravnadzor.service.FileChooserService;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,19 +11,17 @@ import java.io.File;
 
 public class MainFrame extends AbstractFrame {
     private MainController mc;
-    private FileChooserService fcs;
 
     public MainFrame(){
-        setSize(500, 180);
+        setSize(550, 180);
         setResizable(true);
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dimension = toolkit.getScreenSize();
         setLocation(dimension.width/2 - 250, dimension.height/2 - 90);
         setTitle("ReportMagicApp");
-        setResizable(false);
         setVisible(true);
+        setResizable(false);
         mc = new MainController();
-        fcs = new FileChooserService();
         onInitComponents();
     }
 
@@ -43,17 +41,63 @@ public class MainFrame extends AbstractFrame {
         newFileWay.setEnabled(false);
 
         JButton pastBrowse = new JButton("...");
+        pastBrowse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Отчет за предыдущий месяц");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
+                int result = fileChooser.showOpenDialog(MainFrame.this);
+
+                if(result == JFileChooser.APPROVE_OPTION){
+                    pastFileWay.setText(fileChooser.getSelectedFile().getPath());
+                }
+            }
+        });
 
         JButton thisBrowse = new JButton("...");
+        thisBrowse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Отчет за нынешний месяц");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
+                int result = fileChooser.showOpenDialog(MainFrame.this);
+
+                if(result == JFileChooser.APPROVE_OPTION){
+                    thisFileWay.setText(fileChooser.getSelectedFile().getPath());
+                }
+            }
+        });
+
         JButton newBrowse = new JButton("...");
+        newBrowse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Сохранить в...");
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = fileChooser.showOpenDialog(MainFrame.this);
+
+                if(result == JFileChooser.APPROVE_OPTION){
+                    newFileWay.setText(fileChooser.getSelectedFile().getPath());
+                }
+            }
+        });
 
         JButton confirm = new JButton("Запустить");
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mc.readPastTable(new File(pastFileWay.getText()));
-                mc.readThisTable(new File(thisFileWay.getText()));
-                mc.writeTable(newFileWay.getText());
+                File thisFile = new File(thisFileWay.getText());
+                mc.readThisTable(thisFile);
+                StringBuilder newFilePath = new StringBuilder(newFileWay.getText());
+                newFilePath.append("\\new");
+                newFilePath.append(thisFile.getName());
+                mc.writeTable(newFilePath.toString());
             }
         });
 
@@ -95,6 +139,7 @@ public class MainFrame extends AbstractFrame {
                             .addComponent(confirm)));
 
         add(mainPanel);
+        revalidate();
     }
 
 
