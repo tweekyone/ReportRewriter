@@ -56,6 +56,16 @@ public class MainController {
 
     }
 
+    public String getFileExtension(String fullName) {
+        if(!fullName.isEmpty()) {
+            String fileName = new File(fullName).getName();
+            int dotIndex = fileName.lastIndexOf('.');
+            return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+        } else {
+            return "";
+        }
+    }
+
     public List<TableRepresentation> getPastMonth() {
         return pastMonth;
     }

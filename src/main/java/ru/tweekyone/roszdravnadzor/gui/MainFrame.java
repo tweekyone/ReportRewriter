@@ -29,6 +29,9 @@ public class MainFrame extends AbstractFrame {
         JLabel pastFileLabel = new JLabel("Укажите предыдущий отчет:");
         JLabel thisFileLabel = new JLabel("Укажите действующий отчет:");
         JLabel newFileLabel = new JLabel("Куда сохранить:");
+        JLabel errorLabel = new JLabel();
+        errorLabel.setVisible(false);
+        errorLabel.setForeground(Color.red);
 
         TextField pastFileWay = new TextField();
         pastFileWay.setEditable(false);
@@ -51,7 +54,14 @@ public class MainFrame extends AbstractFrame {
                 int result = fileChooser.showOpenDialog(MainFrame.this);
 
                 if(result == JFileChooser.APPROVE_OPTION){
-                    pastFileWay.setText(fileChooser.getSelectedFile().getPath());
+                    String way = fileChooser.getSelectedFile().getPath();
+                    if(!mc.getFileExtension(way).equals("csv")){
+                        errorLabel.setText("Не верный формат файла!");
+                        errorLabel.setVisible(true);
+                    } else {
+                        errorLabel.setVisible(false);
+                        pastFileWay.setText(way);
+                    }
                 }
             }
         });
@@ -67,7 +77,14 @@ public class MainFrame extends AbstractFrame {
                 int result = fileChooser.showOpenDialog(MainFrame.this);
 
                 if(result == JFileChooser.APPROVE_OPTION){
-                    thisFileWay.setText(fileChooser.getSelectedFile().getPath());
+                    String way = fileChooser.getSelectedFile().getPath();
+                    if(!mc.getFileExtension(way).equals("csv")){
+                        errorLabel.setText("Не верный формат файла!");
+                        errorLabel.setVisible(true);
+                    } else {
+                        errorLabel.setVisible(false);
+                        thisFileWay.setText(way);
+                    }
                 }
             }
         });
@@ -91,13 +108,19 @@ public class MainFrame extends AbstractFrame {
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mc.readPastTable(new File(pastFileWay.getText()));
-                File thisFile = new File(thisFileWay.getText());
-                mc.readThisTable(thisFile);
-                StringBuilder newFilePath = new StringBuilder(newFileWay.getText());
-                newFilePath.append("\\new");
-                newFilePath.append(thisFile.getName());
-                mc.writeTable(newFilePath.toString());
+                if(!pastFileWay.getText().isEmpty() || !thisFileWay.getText().isEmpty() || !newFileWay.getText().isEmpty()) {
+                    errorLabel.setVisible(false);
+                    mc.readPastTable(new File(pastFileWay.getText()));
+                    File thisFile = new File(thisFileWay.getText());
+                    mc.readThisTable(thisFile);
+                    StringBuilder newFilePath = new StringBuilder(newFileWay.getText());
+                    newFilePath.append("\\new");
+                    newFilePath.append(thisFile.getName());
+                    mc.writeTable(newFilePath.toString());
+                } else {
+                    errorLabel.setText("Укажите путь!");
+                    errorLabel.setVisible(true);
+                }
             }
         });
 
@@ -111,7 +134,8 @@ public class MainFrame extends AbstractFrame {
                         .addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(pastFileLabel)
                             .addComponent(thisFileLabel)
-                            .addComponent(newFileLabel))
+                            .addComponent(newFileLabel)
+                            .addComponent(errorLabel))
                         .addGroup(gl.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(pastFileWay)
                             .addComponent(thisFileWay)
@@ -136,6 +160,7 @@ public class MainFrame extends AbstractFrame {
                             .addComponent(newFileWay)
                             .addComponent(newBrowse))
                         .addGroup(gl.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(errorLabel)
                             .addComponent(confirm)));
 
         add(mainPanel);
