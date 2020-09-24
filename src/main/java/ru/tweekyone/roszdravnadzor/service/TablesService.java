@@ -1,5 +1,6 @@
 package ru.tweekyone.roszdravnadzor.service;
 
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 import ru.tweekyone.roszdravnadzor.beans.TableRepresentation;
 
 import java.util.ArrayList;
@@ -17,8 +18,13 @@ public class TablesService {
             for (int i = 0; i < thisMonth.size(); i++) {
                 TableRepresentation result = null;
                 for (int j = 0; j < pastMonth.size(); j++) {
-                    if(thisMonth.get(i).getSeries().equals(pastMonth.get(j).getSeries())
-                            && thisMonth.get(i).getLs().toLowerCase().trim().equals(pastMonth.get(j).getLs().toLowerCase().trim())){
+                    StringBuilder pastMonthSeries0 = new StringBuilder();
+                    pastMonthSeries0.append("0");
+                    pastMonthSeries0.append(pastMonth.get(j).getSeries());
+                    if((thisMonth.get(i).getSeries().equals(pastMonth.get(j).getSeries())
+                            && thisMonth.get(i).getLs().toLowerCase().trim().equals(pastMonth.get(j).getLs().toLowerCase().trim()))
+                        || (thisMonth.get(i).getSeries().equals(pastMonthSeries0.toString())
+                            && thisMonth.get(i).getLs().toLowerCase().trim().equals(pastMonth.get(j).getLs().toLowerCase().trim()))){
                         result = new TableRepresentation();
                         result.setLs(thisMonth.get(i).getLs());
                         result.setDrugID(pastMonth.get(j).getDrugID());

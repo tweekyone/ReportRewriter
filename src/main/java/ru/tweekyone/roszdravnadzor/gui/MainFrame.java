@@ -117,6 +117,9 @@ public class MainFrame extends AbstractFrame {
                     newFilePath.append("\\new");
                     newFilePath.append(thisFile.getName());
                     mc.writeTable(newFilePath.toString());
+                    errorLabel.setText("Отчет сохранен!");
+                    errorLabel.setForeground(Color.green);
+                    errorLabel.setVisible(true);
                 } else {
                     errorLabel.setText("Укажите путь!");
                     errorLabel.setVisible(true);
